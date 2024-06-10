@@ -8,6 +8,28 @@ generator client {
 }
 
 model User {
-  id   String @id @default(cuid())
-  name String
+  id                      String                    @id @default(cuid())
+  name                    String
+  email                   String                    @unique
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  UserWorkspaceMembership UserWorkspaceMembership[]
+}
+
+model Workspace {
+  id                      String                    @id @default(cuid())
+  name                    String
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  UserWorkspaceMembership UserWorkspaceMembership[]
+}
+
+model UserWorkspaceMembership {
+  userId      String
+  workspaceId String
+
+  user      User      @relation(fields: [userId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@id([userId, workspaceId])
 }
